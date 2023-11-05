@@ -14,11 +14,6 @@ const createAuthor = async (req, res) => {
 const getAllAuthors = async (req, res) => {
   try {
     const authors = await Author.find();
-    if (authors == null) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Cannot find authors" });
-    }
     res.json({ success: true, data: authors });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
