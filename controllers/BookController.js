@@ -1,12 +1,12 @@
 import Book from "../models/Book.js";
+import fs from "fs";
 import path from "path";
 
 // Create a new book
 export const createBook = async (req, res) => {
   try {
     const { title, description, author, category } = req.body;
-    console.log("file:", req.file);
-    console.log("path:", path.extname(req.file.originalname));
+
     const newBook = new Book({
       title,
       description,
@@ -69,12 +69,32 @@ export const updateBook = async (req, res) => {
 // Delete a book by ID
 export const deleteBook = async (req, res) => {
   try {
-    const book = await Book.findByIdAndRemove(req.params.id);
-    if (!book)
+    const book = await Book.findOneAndDelete({ _id: req.params.id });
+    console.log("BOOK:", book);
+    if (!book) {
       return res
         .status(404)
         .json({ success: false, message: "Book not found" });
-    res.json({ success: true, message: "Book deleted successfully" });
+    } else {
+      // Delete the image file from the filesystem
+      const imagePath = book.image.destination;
+      fs.unlink(imagePath, (err) => {
+        if (err) {
+          // Handle the error if the file doesn't exist or couldn't be deleted
+          console.error("Failed to delete the image file:", err);
+          return res.status(500).json({
+            success: false,
+            message: "Book is deleted but failed to delete the image file",
+          });
+        }
+        console.log("Image file deleted successfully");
+
+        res.json({
+          success: true,
+          message: "Book and image deleted successfully",
+        });
+      });
+    }
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

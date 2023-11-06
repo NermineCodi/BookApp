@@ -5,7 +5,7 @@ import multer from "multer";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     // Define the destination folder for the uploads
-    cb(null, "./uploads/");
+    cb(null, "./public/uploads/");
   },
   filename: function (req, file, cb) {
     // Define the file naming convention
