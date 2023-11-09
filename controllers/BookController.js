@@ -5,13 +5,13 @@ import path from "path";
 // Create a new book
 export const createBook = async (req, res) => {
   try {
-    const { title, description, author, category } = req.body;
+    const { title, description, author, categories } = req.body;
 
     const newBook = new Book({
       title,
       description,
       author,
-      category: JSON.parse(category), // This should be an array of category IDs
+      categories: JSON.parse(categories), // This should be an array of category IDs
       image: {
         name: req.file.filename,
         imageType: req.file.mimetype,

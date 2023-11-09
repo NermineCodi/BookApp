@@ -2,11 +2,12 @@ import express, { urlencoded } from "express";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import cors from "cors";
-
 import connectDB from "./config/db.js";
 import authorRouter from "./routes/authors.js";
 import bookRouter from "./routes/books.js";
 import categoryRouter from "./routes/categories.js";
+import { fileURLToPath } from 'url';
+import path from 'path';
 
 dotenv.config();
 
@@ -21,9 +22,11 @@ if (process.env.NODE_ENV === "development") {
   //enable logging
   app.use(morgan("dev"));
 }
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.json()); // for parsing application/json
-app.use(express.static("public")); // Serve static assets from the 'public' folder, where 'images' is a subfolder
+app.use('/public',express.static(path.join(__dirname ,"public"))); // Serve static assets from the 'public' folder, where 'uploads' is a subfolder
 app.use(cors()); // Enable All CORS Requests
 
 app.use("/api/authors", authorRouter);

@@ -11,7 +11,7 @@ import {
 } from "../controllers/BookController.js";
 
 // Setting up routes
-router.post("/", upload.single("file"), createBook);
+router.post("/", upload.single("image"), createBook);
 router.get("/", getAllBooks);
 router.get("/:id", getBook);
 router.patch("/:id", updateBook);
